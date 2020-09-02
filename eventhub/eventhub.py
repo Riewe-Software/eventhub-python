@@ -18,9 +18,9 @@ class Eventhub:
 
     def validate_event(self, event_name: str, event_properties: dict):
         event = self.registry.get_event(event_name)[event_name]['properties']
-        self.validate_dict_types(event, event_properties)
+        self._validate_dict_types(event, event_properties)
 
-    def validate_dict_types(self, d_1: dict, d_2: dict):
+    def _validate_dict_types(self, d_1: dict, d_2: dict):
         if d_1.keys() != d_2.keys():
             missing_keys = (set(d_1.keys()) - set(d_2.keys())) or None
             redundant_keys = (set(d_2.keys()) - set(d_1.keys())) or None
@@ -34,7 +34,7 @@ class Eventhub:
                 raise KeyError("Missing data for '{}'".format(key))
 
             if isinstance(value, dict):
-                self.validate_dict_types(value, d_2_value)
+                self._validate_dict_types(value, d_2_value)
             else:
                 try:
                     value_type = self.TYPE_MAPPING[value]
